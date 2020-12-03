@@ -450,7 +450,7 @@ func matchesExternalLabels(ms []storepb.LabelMatcher, externalLabels labels.Labe
 	for i, tm := range tms {
 		// Validate all matchers.
 		extValue := externalLabels.Get(tm.Name)
-		if extValue == "" {
+		if extValue == "" || !tm.Matches(extValue) {
 			// Agnostic to external labels.
 			newMatcher = append(newMatcher, ms[i])
 			continue

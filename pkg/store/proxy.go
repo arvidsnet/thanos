@@ -523,9 +523,12 @@ func labelSetsMatch(matchers []*labels.Matcher, lss ...labels.Labels) bool {
 	for _, ls := range lss {
 		notMatched := false
 		for _, m := range matchers {
-			if lv := ls.Get(m.Name); lv != "" && !m.Matches(lv) {
-				notMatched = true
-				break
+			for _, l := range ls {
+				if l.Name == m.Name && !m.Matches(l.Value) {
+					notMatched = true
+				} else if l.Name == m.Name && m.Matches(l.Value) {
+					return true
+				}
 			}
 		}
 		if !notMatched {
